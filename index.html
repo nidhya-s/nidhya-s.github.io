@@ -95,32 +95,162 @@
             <!-- Project 1 Tab -->
             <section id="project1" class="tab-content">
                 <div class="project-container">
-                    <h2>Project 1</h2>
-                    <div class="project-content">
-                        <div class="project-card">
-                            <div class="project-header">
-                                <h3>Project Details Coming Soon</h3>
-                                <p>This section will contain information about the first programming project.</p>
+                    <h2>Project 1: Images of the Russian Empire</h2>
+                    
+
+                    <!-- Project 1 Introduction -->
+                    <div class="project-intro">
+                        <h3>Introduction</h3>
+                        <p>
+                            In the early 1900s, Sergei Mikhailovich Prokudin-Gorskii pioneered color photography across the Russian Empire, capturing thousands of images with a three-filter RGB process. His glass plate negatives, later <a href="https://www.loc.gov/collections/prokudin-gorskii/?st=grid">digitized</a> by the Library of Congress, preserve a vivid record of Imperial Russia. 
+                            <br><br>
+                            <br><br>
+                        </p>
+                    </div>
+
+                    <!-- Simpler Method Section -->
+                    <div class="method-section">
+                        <h3>Part 1: Single Scale Alignment</h3>
+                        <p>The simplest approach to this problem is to use an extensive search method. To do so, all possible shifts are tried within a certain window_size, which I set to 15 pixels horizontally and vertically. All of these shifts were evaluated on either the L2 Norm or the Normalized Cross-Correlation (NCC) metric, and whichever displacement minimized/maximized the specific metric was used. Both methods were similarly useful in identifying the best displacement to use, but I have only shown the results for NCC here.
+                            <br><br>
+                            An issue I encountered was the borders on the image being variant. In order to solve this, I trimmed the border of each image by 50 pixels on all sides. This helped to ensure that the alignment process focused on the central features of the images rather than being skewed by border artifacts. This number was determined through trial and error.
+                            <br><br>
+                            Below are results using the basic alignment method.     
+                            <br><br>
+                        </p>
+                        <div class="image-group" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">cathedral.jpg</p>
+                                <img src="images/cathedral_ncc.png" alt="Cathedral" style="width: 250px;">
+                                <p style="text-align: center;">Red: (7, 1) <br> Blue: (-5, -2)</p>
                             </div>
-                            <div class="project-grid">
-                                <div class="project-section">
-                                    <h4>Project Description</h4>
-                                    <div class="placeholder-content">
-                                        <p>Details about the project goals and objectives will be added here.</p>
-                                    </div>
-                                </div>
-                                <div class="project-section">
-                                    <h4>Implementation</h4>
-                                    <div class="placeholder-content">
-                                        <p>Technical details and implementation approach will be documented here.</p>
-                                    </div>
-                                </div>
-                                <div class="project-section">
-                                    <h4>Results</h4>
-                                    <div class="placeholder-content">
-                                        <p>Project outcomes and analysis will be presented here.</p>
-                                    </div>
-                                </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">monastery.jpg</p>
+                                <img src="images/monastary_ncc.png" alt="Monastary" style="width: 250px;">
+                                <p style="text-align: center;">Red: (6, 1) <br> Blue: (3, -2)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">tobolsk.jpg</p>
+                                <img src="images/tobolsk_ncc.png" alt="Tobolsk" style="width: 250px;">
+                                <p style="text-align: center;">Red: (4, 1) <br> Blue: (-3, -3)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <br><br>
+                    <!-- Image Pyramid Speedup Section -->
+                    <div class="method-section">
+                        <h3>Part 2: Image Pyramid Speedup</h3>
+                        <p>The method above works well for small images. However, when the image size becomes very large, this exhaustive search can take a very long time.
+                            In order to solve this problem, we implement an image pyramid, where we create smaller versions of the image at multiple scales. We start by aligning the smallest images in the pyramid, which is computationally cheaper.
+                             The displacement found at this level is then used as a starting point for aligning the next larger images, refining the search within a smaller window around the initial estimate. This process continues up the pyramid until we reach the original image size.
+                            <br><br>
+                            Many parameters were tuned in order to get the best results. The number of levels in the pyramid was set a variable amount, where the smallest image had a size of around 300 pixels. At each level, the image was downsampled by a factor of 3. The window size for the exhaustive search 
+                            at the level where the image size was the smallest was set to a larger value, as I felt that more exploration was needed at very small sizes. For every other level, the window size was very small to keep the runtime low. The same NCC metric was used for evaluating shifts at each level.
+                            <br><br>
+                            Below are the image results using the image pyramid speedup method.
+                            <br><br>
+                        </p>
+                        <div class="image-group" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <!-- 14 image slots -->
+                            <!-- Row 1 -->
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">cathedral.jpg</p>
+                                <img src="images/cathedral.png" alt="Cathedral" style="width: 250px;">
+                                <p style="text-align: center;">Red: (7, 1) <br> Blue: (-5, -2)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">monastery.jpg</p>
+                                <img src="images/monastery.png" alt="Monastary" style="width: 250px;">
+                                <p style="text-align: center;">Red: (6, 1) <br> Blue: (3, -2)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">tobolsk.jpg</p>
+                                <img src="images/tobolsk.png" alt="Tobolsk" style="width: 250px;">
+                                <p style="text-align: center;">Red: (4, 1) <br> Blue: (-3, -3)</p>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">church.tif</p>
+                                <img src="images/church.png" alt="Church" style="width: 250px;">
+                                <p style="text-align: center;">Red: (33, -8) <br> Blue: (-25, -4)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">emir.tif</p>
+                                <img src="images/emir.png" alt="Emir" style="width: 250px;">
+                                <p style="text-align: center;">Red: (57, 17) <br> Blue: (-49, -24)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">harvesters.tif</p>
+                                <img src="images/harvesters.png" alt="Harvesters" style="width: 250px;">
+                                <p style="text-align: center;">Red: (65, -3) <br> Blue: (-59, -17)</p>
+                            </div>
+                            <!-- Row 3 -->
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">icon.tif</p>
+                                <img src="images/icon.png" alt="Icon" style="width: 250px;">
+                                <p style="text-align: center;">Red: (48, 5) <br> Blue: (-41, -17)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">italil.tif</p>
+                                <img src="images/italil.png" alt="Italil" style="width: 250px;">
+                                <p style="text-align: center;">Red: (38, 15) <br> Blue: (-38, -21)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">lastochikino.tif</p>
+                                <img src="images/lastochikino.png" alt="Lastochikino" style="width: 250px;">
+                                <p style="text-align: center;">Red: (78, -7) <br> Blue: (2, 2)</p>
+                            </div>
+                            <!-- Row 4 -->
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">lugano.tif</p>
+                                <img src="images/lugano.png" alt="Lugano" style="width: 250px;">
+                                <p style="text-align: center;">Red: (52, -13) <br> Blue: (-41, 16)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">melons.tif</p>
+                                <img src="images/melons.png" alt="Melons" style="width: 250px;">
+                                <p style="text-align: center;">Red: (96, 3) <br> Blue: (-81, -10)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">self_portrait.tif</p>
+                                <img src="images/self-portrait.png" alt="Pyramid Image 12" style="width: 250px;">
+                                <p style="text-align: center;">Red: (98, 8) <br> Blue: (-78, -29)</p>
+                            </div>
+                            <!-- Row 5 -->
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">siren.tif</p>
+                                <img src="images/siren.png" alt="Siren" style="width: 250px;">
+                                <p style="text-align: center;">Red: (47, -19) <br> Blue: (-49, 6)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">three_generations.tif</p>
+                                <img src="images/three_generations.png" alt="Three Generations" style="width: 250px;">
+                                <p style="text-align: center;">Red: (59, -3) <br> Blue: (-52, -13)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <br><br>
+                    <!-- Chosen Images Section -->
+                    <div class="method-section">
+                        <h3>My Chosen Images</h3>
+                        <p>Below are three images I selected. The same parameters from above were used again.</p>
+                        <div class="image-group" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">sunset.tif</p>
+                                <img src="images/sunset.png" alt="Sunset" style="width: 250px;">
+                                <p style="text-align: center;">Red: (0, 46) <br> Blue: (0, 0)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">gate.tif</p>
+                                <img src="images/gate.png" alt="Gate" style="width: 250px;">
+                                <p style="text-align: center;">Red: (62, 4) <br> Blue: (-26, -8)</p>
+                            </div>
+                            <div class="image-item" style="flex: 1 0 30%; max-width: 30%;">
+                                <p style="text-align: center;">mountain.tif</p>
+                                <img src="images/mountain.png" alt="Mountain" style="width: 250px;">
+                                <p style="text-align: center;">Red: (52, -13) <br> Blue: (-41, 16)</p>
                             </div>
                         </div>
                     </div>
@@ -128,7 +258,7 @@
             </section>
 
             <!-- Project 2 Tab -->
-            <section id="project2" class="tab-content">
+            <!-- <section id="project2" class="tab-content">
                 <div class="project-container">
                     <h2>Project 2</h2>
                     <div class="project-content">
@@ -160,10 +290,10 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
             <!-- Project 3 Tab -->
-            <section id="project3" class="tab-content">
+            <!-- <section id="project3" class="tab-content">
                 <div class="project-container">
                     <h2>Project 3</h2>
                     <div class="project-content">
@@ -195,10 +325,10 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
             <!-- Project 4 Tab -->
-            <section id="project4" class="tab-content">
+            <!-- <section id="project4" class="tab-content">
                 <div class="project-container">
                     <h2>Project 4</h2>
                     <div class="project-content">
@@ -230,10 +360,10 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
             <!-- Project 5 Tab -->
-            <section id="project5" class="tab-content">
+            <!-- <section id="project5" class="tab-content">
                 <div class="project-container">
                     <h2>Project 5</h2>
                     <div class="project-content">
@@ -265,13 +395,13 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->
         </div>
     </main>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 CS 180 - Introduction to Computer Vision | UC Berkeley</p>
+            <p>&copy; 2025 CS 180 - Introduction to Computer Vision | UC Berkeley</p>
         </div>
     </footer>
 
