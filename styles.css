@@ -357,6 +357,54 @@ body {
     gap: 30px;
 }
 
+/* Allow a project-section to span the full width of the project-grid (use class="project-section full-width") */
+.project-section.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Code block styling: left-aligned, monospace font, subtle background and border */
+.code-snippet {
+    text-align: left;
+    font-family: Menlo, Monaco, 'Courier New', monospace;
+    background: #f5f7fa;
+    color: #021426;
+    padding: 16px;
+    border-radius: 10px;
+    overflow: auto;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    border-left: 4px solid #003262;
+}
+.code-snippet code {
+    display: block;
+    white-space: pre; /* preserve spacing exactly */
+    font-family: inherit;
+    color: inherit;
+}
+
+/* Make sure pre/code inside project-section are left aligned even when the section centers text */
+.project-section pre,
+.project-section code {
+    text-align: left;
+}
+
+/* Center image-group contents (e.g., cameraman results) when inside a full-width section */
+.project-section.full-width .image-group {
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ensure images inside full-width image groups have uniform height */
+.project-section.full-width .image-group .image-item img {
+    height: 260px; /* consistent height for all thumbnails */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .project-section {
     text-align: center;
     padding: 25px;
