@@ -475,8 +475,22 @@ edges = (grad_mag_dog > thresh).astype(np.uint8) * 255
                             <div class="project-section">
                                 <h3>Part 2.1: Image "Sharpening" (Unsharp Mask)</h3>
                                 <p>
-                                    I picked the taj mahal image and "sharpened" it using the unsharp masking technique. I blurred the image with a Gaussian low-pass, subtracted it from the original to obtain high frequencies, then added a scaled version of the high frequencies back to the original. I combined into a single convolution (unsharp mask). I displayed the results for the provided image (<strong>taj</strong>) and other examples below.
-                                    In every case, the sharpened image looks sharper and more detailed compared to the original. The edges are more defined and the overall image is as or more visually appealing.
+                                    The unsharp mask filter is a classic image sharpening technique that enhances edges and fine details. It works by first applying a blur filter (typically a Gaussian blur) to the original image, which removes high-frequency content (fine details and edges). The blurred image is then subtracted from the original, isolating the high-frequency components. These high frequencies are scaled by a sharpening amount (sometimes called "alpha" or "amount") and added back to the original image, resulting in a sharpened effect.
+
+                                    Mathematically, the process is:
+                                    <br>
+                                    <code>
+                                    Sharpened = Original + amount × (Original - Blurred)
+                                    </code>
+                                    <br><br>
+                                    <strong>How it works:</strong>
+                                    <ul>
+                                        <li><b>Blurred image:</b> Contains only the low-frequency (smooth) parts of the image.</li>
+                                        <li><b>High-frequency image:</b> The difference between the original and blurred image, highlighting edges and fine details.</li>
+                                        <li><b>Sharpened image:</b> The original image plus a scaled version of the high frequencies, making edges and details more prominent.</li>
+                                    </ul>
+                                    <br>
+                                    Below, I show the blurred, high-frequency, and sharpened versions of the Taj Mahal image, as well as others. A higher amount increases the sharpness and edge contrast, while a lower amount gives a subtler effect.
                                     <br><br>
                                 </p>
                                 
@@ -506,18 +520,22 @@ edges = (grad_mag_dog > thresh).astype(np.uint8) * 255
                                 <h3>Part 2.2: Hybrid Images</h3>
                                 <p>
                                     I created hybrid images by combining the low-frequency part of one image with the high-frequency part of another (Oliva et al., SIGGRAPH 2006). I aligned the images, chose cutoff frequencies, and showed the hybrid result (view near and far). I also showed Fourier magnitude visualizations.
+                                    I choose the cutoff frequencies by visualizing the Fourier magnitude visualizations and choosing the frequencies that are most visible in the hybrid image.
                                     <br><br>
                                 </p>
                                 <div class="image-group" style="display:flex; flex-direction:column; gap:20px; align-items:center;">
                                     <div class="image-item" style="flex:1 0 90%; max-width:90%; text-align:center;">
-                                        <p>FFT Magnitude Visualization</p>
-                                        <img src="images/fft.png" alt="FFT magnitude" style="width:100%; max-width:600px;">
+                                        
                                     </div>
                                 </div>
                                 <div class="image-group" style="display:flex; flex-direction:column; gap:20px; align-items:center;">
                                     <div class="image-item" style="flex:1 0 90%; max-width:90%; text-align:center;">
                                         <p>Derek & Cat</p>
                                         <img src="images/derek_cat.png" alt="derek and cat" style="width:100%; max-width:600px;">
+                                        <p>FFT Magnitude Visualization</p>
+                                        <img src="images/fft.png" alt="FFT magnitude" style="width:100%; max-width:600px;">
+                                        <p>Filters</p>
+                                        <img src="images/filters.png" alt="filters" style="width:100%; max-width:600px;">
                                     </div>
                                     <div class="image-item" style="flex:1 0 90%; max-width:90%; text-align:center;">
                                         <p>Me & Koala</p>
@@ -536,6 +554,7 @@ edges = (grad_mag_dog > thresh).astype(np.uint8) * 255
                                 <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
                                 <p>
                                     I implemented Gaussian and Laplacian stacks (stacks, not pyramids) by repeated blurring with no downsampling. I visualized the stacks for the Oraple example and reproduced the reference figure.
+                                    I tuned the parameters to get the best results.
                                 </p>
                                 <div class="image-group" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
                                     <div class="image-item" style="max-width: 90%; text-align: center;">
@@ -551,6 +570,7 @@ edges = (grad_mag_dog > thresh).astype(np.uint8) * 255
                                 <h3>Part 2.4: Multiresolution Blending (the Oraple)</h3>
                                 <p>
                                     I blended two images using multiresolution blending (Burt & Adelson). I used stacks and a Gaussian stack for masks to smooth seams. I showed the apple/orange example and other creative blends: a desert and beach, and a galaxy and an eyeball.
+                                    I tuned the parameters to get the best results.
                                 </p>
                                 <div class="image-group" style="display:flex; gap:20px; flex-wrap:wrap;">
                                     <div class="image-item" style="width:100%; max-width:2000px; text-align:center; margin-bottom:30px;">
@@ -566,6 +586,10 @@ edges = (grad_mag_dog > thresh).astype(np.uint8) * 255
                                     <div class="image-item" style="width:100%; max-width:2000px; text-align:center; margin-bottom:30px;">
                                         <p>Galaxy/Eyeball: Laplacian Stack Visualization</p>
                                         <img src="images/eyeball_galaxy_stack.png" alt="galaxy eyeball mask" style="width:100%; max-width:2000px;">
+                                    </div>
+                                    <div class="image-item" style="width:100%; max-width:2000px; text-align:center; margin-bottom:30px;">
+                                        <p>Ocean/Sky: Inputs / Blended</p>
+                                        <img src="images/ocean_sky.png" alt="ocean sky blend" style="width:100%; max-width:2000px;">
                                     </div>
                                     <div class="image-item" style="width:100%; max-width:2000px; text-align:center;">
                                         <p>Beach/Desert: Inputs / Blended</p>
