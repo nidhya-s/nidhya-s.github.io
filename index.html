@@ -942,39 +942,415 @@ Recovered homography matrix H:
             </section>
 
             <!-- Project 4 Tab -->
-            <!-- <section id="project4" class="tab-content">
+            <section id="project4" class="tab-content">
                 <div class="project-container">
-                    <h2>Project 4</h2>
+                    <h2>Project 4: Neural Radiance Fields (NeRF)</h2>
                     <div class="project-content">
                         <div class="project-card">
-                            <div class="project-header">
-                                <h3>Project Details Coming Soon</h3>
-                                <p>This section will contain information about the fourth programming project.</p>
+
+                            <!-- Project Introduction -->
+                            <div class="project-intro">
+                                <h3>Introduction</h3>
+                                <p>
+                                    In this project, I implement Neural Radiance Fields (NeRF) to synthesize novel views of 3D scenes from multi-view images.
+                                    NeRF represents scenes as continuous volumetric functions using neural networks, enabling photorealistic rendering from arbitrary viewpoints.
+                                    <br><br>
+                                </p>
                             </div>
-                            <div class="project-grid">
+
+                            <hr>
+
+                            <!-- Part 0: Camera Calibration and 3D Scanning -->
+                            <div class="method-section">
+                                <h3>Part 0: Camera Calibration and 3D Scanning</h3>
+                                <p>
+                                    I calibrated my camera using ArUco tags and captured 3D object scans. The calibration process involved:
+                                    <ul>
+                                        <li>Capturing 30-50 images of ArUco tags from different viewpoints</li>
+                                        <li>Estimating camera intrinsic parameters and distortion coefficients</li>
+                                        <li>Scanning a 3D object with a single ArUco tag visible</li>
+                                        <li>Using PnP (Perspective-n-Point) to estimate camera poses</li>
+                                        <li>Undistorting images for the NeRF dataset</li>
+                                    </ul>
+                                    <br>
+                                </p>
+
                                 <div class="project-section">
-                                    <h4>Project Description</h4>
-                                    <div class="placeholder-content">
-                                        <p>Details about the project goals and objectives will be added here.</p>
-                                    </div>
-                                </div>
-                                <div class="project-section">
-                                    <h4>Implementation</h4>
-                                    <div class="placeholder-content">
-                                        <p>Technical details and implementation approach will be documented here.</p>
-                                    </div>
-                                </div>
-                                <div class="project-section">
-                                    <h4>Results</h4>
-                                    <div class="placeholder-content">
-                                        <p>Project outcomes and analysis will be presented here.</p>
+                                    <h4>Camera Pose Visualizations</h4>
+                                    <div class="image-group" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                                        <div class="image-item" style="flex: 1 0 45%; max-width: 45%; text-align: center;">
+                                            <p>Camera Frustum Visualization 1</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for first camera frustum visualization -->
+                                                <img src="images/proj4_part0_1.png" alt="Camera frustum visualization showing estimated poses" class="project-image" style="width: 100%; max-width: 450px; background-color: #f0f0f0; min-height: 300px;">
+                                            </div>
+                                        </div>
+                                        <div class="image-item" style="flex: 1 0 45%; max-width: 45%; text-align: center;">
+                                            <p>Camera Frustum Visualization 2</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for second camera frustum visualization -->
+                                                <img src="images/proj4_part0_2.png" alt="Camera frustum visualization from different angle" class="project-image" style="width: 100%; max-width: 450px; background-color: #f0f0f0; min-height: 300px;">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <hr>
+
+                            <!-- Part 1: Fit a Neural Field to a 2D Image -->
+                            <div class="method-section">
+                                <h3>Part 1: Fit a Neural Field to a 2D Image</h3>
+                                <p>
+                                    I implemented a Multi-Layer Perceptron (MLP) with sinusoidal positional encoding to represent a 2D image as a neural field.
+                                    The network learns to map 2D pixel coordinates to RGB color values.
+                                    <br><br>
+                                    <strong>Implementation Details:</strong>
+                                    <ul>
+                                        <li>Positional Encoding with L=10 frequency bands for input coordinates</li>
+                                        <li>Random pixel sampling dataloader (batch size: 10,000 pixels)</li>
+                                        <li>MSE loss with Adam optimizer (learning rate: 1e-2)</li>
+                                        <li>Training for 1000-3000 iterations</li>
+                                        <li>PSNR (Peak Signal-to-Noise Ratio) for quality evaluation</li>
+                                    </ul>
+                                    <br>
+                                </p>
+
+                                <div class="project-section">
+                                    <h4>Model Architecture</h4>
+                                    <div class="placeholder-content">
+                                        <p><strong>NeuralField2D Architecture:</strong></p>
+                                        <ul>
+                                            <li><strong>Input:</strong> 2D pixel coordinates (x, y) normalized to [0, 1]</li>
+                                            <li><strong>Positional Encoding:</strong>
+                                                <ul>
+                                                    <li>Input dimension: 2</li>
+                                                    <li>Max frequency log2 (L): 10</li>
+                                                    <li>Output dimension: 42 (2 + 2 × 10 × 2)</li>
+                                                    <li>Encodes coordinates using sin/cos at frequencies 2⁰, 2¹, ..., 2⁹</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>MLP Network:</strong>
+                                                <ul>
+                                                    <li>3 hidden layers, each with 256 neurons</li>
+                                                    <li>Activation: ReLU for hidden layers</li>
+                                                    <li>Output layer: Linear(256 → 3) with Sigmoid activation</li>
+                                                    <li>Total parameters: ~143,363 (with L=10, hidden_dim=256)</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>Output:</strong> 3 channels (RGB) in range [0, 1]</li>
+                                        </ul>
+                                        <p><strong>Training Configuration:</strong></p>
+                                        <ul>
+                                            <li>Optimizer: Adam</li>
+                                            <li>Learning rate: 1e-2</li>
+                                            <li>Loss function: MSE (Mean Squared Error)</li>
+                                            <li>Batch size: 10,000 pixels (randomly sampled)</li>
+                                            <li>Training iterations: 1,000-3,000</li>
+                                            <li>Evaluation metric: PSNR (Peak Signal-to-Noise Ratio)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="project-section">
+                                    <h4>Training Progression</h4>
+                                    <div class="image-group" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                                        <div class="image-item" style="flex: 1 0 100%; max-width: 100%; text-align: center;">
+                                            <p>Training on Provided Image</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for training progression on provided image -->
+                                                <img src="images/fox_training_prog.png" alt="Training progression on provided image" class="project-image" style="width: 100%; max-width: 800px; background-color: #f0f0f0; min-height: 300px;">
+                                            </div>
+                                        </div>
+                                        <div class="image-item" style="flex: 1 0 100%; max-width: 100%; text-align: center;">
+                                            <p>Training on My Own Image</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for training progression on own image -->
+                                                <img src="images/dog_training_prog.png" alt="Training progression on custom image" class="project-image" style="width: 100%; max-width: 800px; background-color: #f0f0f0; min-height: 300px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="project-section">
+                                    <h4>Hyperparameter Exploration: PE Frequency & Network Width</h4>
+                                    <div class="image-group" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                                        <div class="image-item" style="flex: 1 0 100%; max-width: 100%; text-align: center;">
+                                            <p>2×2 Grid: PE Frequencies vs Network Widths</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for hyperparameter grid -->
+                                                <img src="images/hyperparam.png" alt="Results with different PE frequencies and network widths" class="project-image" style="width: 100%; max-width: 800px; background-color: #f0f0f0; min-height: 300px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="project-section">
+                                    <h4>PSNR Curve</h4>
+                                    <div class="image-group" style="display: flex; justify-content: center;">
+                                        <div class="image-item" style="max-width: 1000px; text-align: center;">
+                                            <p>PSNR over Training Iterations</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for PSNR curve -->
+                                                <img src="images/dog_psnr.png" alt="PSNR curve during training" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Part 2: Neural Radiance Field from Multi-view Images -->
+                            <div class="method-section">
+                                <h3>Part 2: Neural Radiance Field from Multi-view Images</h3>
+                                <p>
+                                    I implemented a full Neural Radiance Field (NeRF) to synthesize novel views from multi-view images.
+                                    This involves ray generation, point sampling along rays, a deeper MLP network, and volume rendering.
+                                    <br><br>
+                                </p>
+
+                                <!-- Part 2.1-2.3: Ray and Data Processing -->
+                                <div class="project-section">
+                                    <h4>Part 2.1-2.3: Coordinate Transforms and Ray Sampling</h4>
+                                    <p>
+                                        <strong>Implementation:</strong>
+                                        <ul>
+                                            <li>Camera-to-world coordinate transformation</li>
+                                            <li>Pixel-to-camera coordinate mapping</li>
+                                            <li>Pixel-to-ray direction computation</li>
+                                            <li>Batched operations for efficiency (NumPy or PyTorch)</li>
+                                            <li>Ray sampling from multiple viewpoints</li>
+                                            <li>Point sampling along rays with stratified sampling (near=2.0, far=6.0, n_samples=32-64)</li>
+                                        </ul>
+                                    </p>
+
+                                    <div class="image-group" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px;">
+                                        <div class="image-item" style="flex: 1 0 45%; max-width: 45%; text-align: center;">
+                                            <p>Ray Visualization 1</p>
+                                            <div class="image-placeholder">
+                                                <img src="images/rays_1.png" alt="Ray visualization showing camera poses and rays" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                            </div>
+                                        </div>
+                                        <div class="image-item" style="flex: 1 0 45%; max-width: 45%; text-align: center;">
+                                            <p>Ray Visualization 2</p>
+                                            <div class="image-placeholder">
+                                                <img src="images/rays2.png" alt="Ray visualization from different angle" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 2.4: NeRF Network -->
+                                <div class="project-section">
+                                    <h4>Part 2.4: NeRF Network Architecture</h4>
+                                    <p>
+                                        <strong>Network Design:</strong>
+                                        <ul>
+                                            <li>Deeper MLP compared to Part 1</li>
+                                            <li>Inputs: 3D coordinates (PE-encoded) + ray direction (PE-encoded)</li>
+                                            <li>Outputs: Volume density σ (ReLU activation) + RGB color (Sigmoid activation)</li>
+                                            <li>Skip connections via input injection at intermediate layers</li>
+                                        </ul>
+                                    </p>
+                                    <div class="placeholder-content">
+                                        <p><strong>Detailed Architecture Specifications:</strong></p>
+                                        <ul>
+                                            <li><strong>Positional Encoding:</strong>
+                                                <ul>
+                                                    <li>Position encoding: L=10 frequency bands (pos_L=10)</li>
+                                                    <li>Direction encoding: L=4 frequency bands (dir_L=4)</li>
+                                                    <li>Position input dimension: 3D coordinates → 3 × (2×10 + 1) = 63 dimensions</li>
+                                                    <li>Direction input dimension: 3D direction → 3 × (2×4 + 1) = 27 dimensions</li>
+                                                    <li>Encoding formula: [x, sin(2⁰πx), cos(2⁰πx), ..., sin(2^(L-1)πx), cos(2^(L-1)πx)]</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>MLP Architecture:</strong>
+                                                <ul>
+                                                    <li>Total layers: 8 hidden layers</li>
+                                                    <li>Hidden dimension: 256 neurons per layer</li>
+                                                    <li>Activation: ReLU for all hidden layers</li>
+                                                    <li>Network structure:
+                                                        <ul>
+                                                            <li><strong>First half (layers1):</strong> 4 layers processing position encoding
+                                                                <ul>
+                                                                    <li>Input: 63D (position encoding)</li>
+                                                                    <li>Layers: Linear(63 → 256), Linear(256 → 256), Linear(256 → 256), Linear(256 → 256)</li>
+                                                                </ul>
+                                                            </li>
+                                                            <li><strong>Skip connection:</strong> Position encoding concatenated after first 4 layers</li>
+                                                            <li><strong>Second half (layers2):</strong> 4 layers processing concatenated features
+                                                                <ul>
+                                                                    <li>Input: 256 + 63 = 319D (features + position encoding)</li>
+                                                                    <li>First layer: Linear(319 → 256)</li>
+                                                                    <li>Remaining layers: Linear(256 → 256) × 3</li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>Output Heads:</strong>
+                                                <ul>
+                                                    <li><strong>Density head:</strong> Linear(256 → 1) with Softplus activation
+                                                        <ul>
+                                                            <li>Output: Volume density σ (ensures positive values)</li>
+                                                            <li>Bias initialized to 0.1, then shifted by -1.0 for sparser initialization</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><strong>Feature layer:</strong> Linear(256 → 256) for color conditioning</li>
+                                                    <li><strong>Color head:</strong> 2-layer MLP conditioned on view direction
+                                                        <ul>
+                                                            <li>Input: 256 (features) + 27 (direction encoding) = 283D</li>
+                                                            <li>Layer 1: Linear(283 → 128) + ReLU</li>
+                                                            <li>Layer 2: Linear(128 → 3) + Sigmoid</li>
+                                                            <li>Output: RGB color values in [0, 1]</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>Key Features:</strong>
+                                                <ul>
+                                                    <li>Skip connection at layer 4: Injects position encoding to help network learn high-frequency details</li>
+                                                    <li>View-dependent color: RGB prediction conditioned on viewing direction</li>
+                                                    <li>Separate density and color prediction: Density is view-independent, color is view-dependent</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Part 2.5: Volume Rendering -->
+                                <div class="project-section">
+                                    <h4>Part 2.5: Volume Rendering</h4>
+                                    <p>
+                                        <strong>Implementation:</strong>
+                                        <ul>
+                                            <li>Discrete volume rendering equation using PyTorch</li>
+                                            <li>Alpha compositing along rays</li>
+                                            <li>Validation test passed</li>
+                                            <li>Training configuration: learning rate 5e-4, batch size 10k rays, 1000 steps</li>
+                                            <li>Target PSNR: 23+ on validation set</li>
+                                        </ul>
+                                    </p>
+
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; margin-top: 20px;">
+                                        <div class="image-item" style="text-align: center;">
+                                            <p>Training Progression: Predicted Images Across Iterations</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for training progression images -->
+                                                <img src="images/lego_training_prog.png" alt="Rendered images at different training iterations" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                            </div>
+                                        </div>
+
+                                        <div class="image-item" style="text-align: center;">
+                                            <p>Validation PSNR Curve</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for PSNR curve -->
+                                                <img src="images/losspsnr_lego.png" alt="Validation PSNR over training iterations" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                            </div>
+                                        </div>
+
+                                        <div class="image-item" style="text-align: center;">
+                                            <p>Spherical Rendering Video: Lego Scene</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for video/GIF of spherical rendering -->
+                                                <img src="images/lego.gif" alt="360-degree rendering of Lego scene" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 2.6: Train on Custom Data -->
+                                <div class="project-section">
+                                    <h4>Part 2.6: Train on Custom Data</h4>
+                                    <p>
+                                        <strong>Custom Dataset:</strong>
+                                        <ul>
+                                            I faced a lot of issues when trying to get the Android dataset to work. I had to retake the images several times in order to end up with a good dataset. I also heavily tuned the near/far parameters to finally end up with one that worked.
+                                            I also had to resize all of the large calibration and object images to be the same size as that messed up the calibration process initially, after which I downsampled the images to 200x200 pixels to speed up the training process and also scaled
+                                            down the intrinsics accordingly. 
+                                        </ul>
+                                    </p>
+
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; margin-top: 20px;">
+                                        <div class="image-item" style="text-align: center;">
+                                            <p>Novel View Synthesis: Camera Orbit Animation</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for animated GIF -->
+                                                <img src="images/android.gif" alt="Animated orbit of Android" class="project-image" style="width: 100%; max-width: 600px; background-color: #f0f0f0; min-height: 400px;">
+                                            </div>
+                                        </div>
+
+                                        <div class="image-item" style="text-align: center;">
+                                            <p>Training Loss Plot</p>
+                                            <div class="image-placeholder">
+                                                <!-- Placeholder for loss curve -->
+                                                <img src="images/android_training_curves.png" alt="Training loss over iterations" class="project-image" style="width: 100%; max-width: 700px; background-color: #f0f0f0; min-height: 300px;">
+                                            </div>
+                                        </div>
+
+                                        <div class="image-item" style="text-align: center; width: 100%;">
+                                            <p>Intermediate Renders During Training</p>
+                                            <div class="image-group" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px;">
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 0</p>
+                                                    <img src="images/val_iter_0100.png" alt="Android render at iteration 0" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 200</p>
+                                                    <img src="images/val_iter_0200.png" alt="Android render at iteration 200" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 400</p>
+                                                    <img src="images/val_iter_0400.png" alt="Android render at iteration 400" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 600</p>
+                                                    <img src="images/val_iter_0600.png" alt="Android render at iteration 600" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 800</p>
+                                                    <img src="images/val_iter_0800.png" alt="Android render at iteration 800" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 1000</p>
+                                                    <img src="images/val_iter_1000.png" alt="Android render at iteration 1000" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 1200</p>
+                                                    <img src="images/val_iter_1200.png" alt="Android render at iteration 1200" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 1400</p>
+                                                    <img src="images/val_iter_1400.png" alt="Android render at iteration 1400" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 1600</p>
+                                                    <img src="images/val_iter_1600.png" alt="Android render at iteration 1600" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 1800</p>
+                                                    <img src="images/val_iter_1800.png" alt="Android render at iteration 1800" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                                <div class="image-item" style="flex: 1 0 18%; max-width: 18%; min-width: 200px;">
+                                                    <p style="margin-bottom: 10px; font-size: 0.9em;">Iteration 2000</p>
+                                                    <img src="images/val_iter_2000.png" alt="Android render at iteration 2000" class="project-image" style="max-width: 100%; height: auto; background-color: #f0f0f0;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+
+                            <hr>
+
                         </div>
                     </div>
                 </div>
-            </section> -->
+            </section>
 
             <!-- Project 5 Tab -->
             <!-- <section id="project5" class="tab-content">

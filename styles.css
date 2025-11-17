@@ -461,6 +461,63 @@ body {
     color: #003262;
 }
 
+/* Fix list alignment in project sections and placeholder content */
+.project-section ul,
+.placeholder-content ul,
+.project-section p ul,
+.method-section ul,
+.method-section p ul,
+.project-intro ul,
+.project-intro p ul,
+.project-header ul,
+.project-header p ul,
+.project-card ul,
+.project-card p ul,
+.tab-content ul,
+.tab-content p ul {
+    text-align: left;
+    display: inline-block;
+    margin: 15px auto;
+    padding-left: 25px;
+    list-style-position: outside;
+}
+
+.project-section ul ul,
+.placeholder-content ul ul,
+.project-section p ul ul,
+.method-section ul ul,
+.method-section p ul ul,
+.project-intro ul ul,
+.project-intro p ul ul,
+.project-header ul ul,
+.project-header p ul ul,
+.project-card ul ul,
+.project-card p ul ul,
+.tab-content ul ul,
+.tab-content p ul ul {
+    margin-left: 20px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.project-section li,
+.placeholder-content li,
+.project-section p li,
+.method-section li,
+.method-section p li,
+.project-intro li,
+.project-intro p li,
+.project-header li,
+.project-header p li,
+.project-card li,
+.project-card p li,
+.tab-content li,
+.tab-content p li {
+    text-align: left;
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
 /* Footer styles */
 .footer {
     background: linear-gradient(135deg, #343a40 0%, #495057 100%);
