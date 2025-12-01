@@ -1,0 +1,674 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header styles */
+.header {
+    background: linear-gradient(135deg, #003262 0%, #1e4d7b 100%);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+}
+
+.subtitle {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+.institution {
+    font-size: 1.2rem;
+    opacity: 0.85;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+}
+
+/* Navigation styles */
+.navigation {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 50, 98, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 50, 98, 0.1);
+}
+
+.nav-tabs {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    justify-content: center;
+}
+
+.nav-tab {
+    display: block;
+    padding: 22px 28px;
+    text-decoration: none;
+    color: #6c757d;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    position: relative;
+}
+
+.nav-tab:hover {
+    color: #003262;
+    background-color: rgba(0, 50, 98, 0.05);
+    transform: translateY(-2px);
+}
+
+.nav-tab.active {
+    color: #003262;
+    border-bottom-color: #003262;
+    background-color: rgba(0, 50, 98, 0.08);
+}
+
+.nav-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: #003262;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-tab.active::after {
+    width: 100%;
+}
+
+/* Main content styles */
+.main-content {
+    padding: 60px 0;
+    min-height: 70vh;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(30px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.tab-content h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #003262;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+}
+
+.tab-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #003262, #1e4d7b);
+    border-radius: 2px;
+}
+
+/* Project container styles */
+.project-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.project-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+}
+
+.project-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 50, 98, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid rgba(0, 50, 98, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #003262, #1e4d7b, #3a7ca5);
+}
+
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0, 50, 98, 0.15);
+}
+
+.project-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #f1f3f4;
+}
+
+.project-header h3 {
+    color: #003262;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.project-header p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Image comparison styles */
+.image-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* Special styling for Part 3 (single centered item) */
+.image-comparison:last-of-type {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+}
+
+.part-header {
+    grid-column: 1 / -1;
+    color: #003262;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+    position: relative;
+}
+
+.part-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, #003262, #1e4d7b);
+    border-radius: 1px;
+}
+
+.part-subheader {
+    color: #003262;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.image-section {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 15px rgba(0, 50, 98, 0.08);
+    transition: all 0.3s ease;
+}
+
+.image-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 50, 98, 0.12);
+    border-color: #003262;
+}
+
+.image-section h4 {
+    color: #003262;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f3f4;
+}
+
+.image-placeholder {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.image-upload-area {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.image-upload-area:hover {
+    border-color: #003262;
+    background: linear-gradient(135deg, rgba(0, 50, 98, 0.05) 0%, rgba(30, 77, 123, 0.05) 100%);
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 15px;
+    opacity: 0.7;
+}
+
+.image-upload-area p {
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+/* Project image styles */
+.project-image {
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 50, 98, 0.1);
+    transition: transform 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.project-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 50, 98, 0.15);
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+/* Allow a project-section to span the full width of the project-grid (use class="project-section full-width") */
+.project-section.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Code block styling: left-aligned, monospace font, subtle background and border */
+.code-snippet {
+    text-align: left;
+    font-family: Menlo, Monaco, 'Courier New', monospace;
+    background: #f5f7fa;
+    color: #021426;
+    padding: 16px;
+    border-radius: 10px;
+    overflow: auto;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    border-left: 4px solid #003262;
+}
+.code-snippet code {
+    display: block;
+    white-space: pre; /* preserve spacing exactly */
+    font-family: inherit;
+    color: inherit;
+}
+
+/* Make sure pre/code inside project-section are left aligned even when the section centers text */
+.project-section pre,
+.project-section code {
+    text-align: left;
+}
+
+/* Center image-group contents (e.g., cameraman results) when inside a full-width section */
+.project-section.full-width .image-group {
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ensure images inside full-width image groups have uniform height */
+.project-section.full-width .image-group .image-item img {
+    height: 260px; /* consistent height for all thumbnails */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.project-section {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 15px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.project-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 50, 98, 0.1);
+    border-color: #003262;
+}
+
+.project-section h4 {
+    color: #003262;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.project-section h4::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: #003262;
+    border-radius: 1px;
+}
+
+.placeholder-content {
+    color: #868e96;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.placeholder-content p {
+    margin: 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    border: 1px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.placeholder-content p:hover {
+    border-color: #003262;
+    background: rgba(0, 50, 98, 0.05);
+    color: #003262;
+}
+
+/* Fix list alignment in project sections and placeholder content */
+.project-section ul,
+.placeholder-content ul,
+.project-section p ul,
+.method-section ul,
+.method-section p ul,
+.project-intro ul,
+.project-intro p ul,
+.project-header ul,
+.project-header p ul,
+.project-card ul,
+.project-card p ul,
+.tab-content ul,
+.tab-content p ul {
+    text-align: left;
+    display: inline-block;
+    margin: 15px auto;
+    padding-left: 25px;
+    list-style-position: outside;
+}
+
+.project-section ul ul,
+.placeholder-content ul ul,
+.project-section p ul ul,
+.method-section ul ul,
+.method-section p ul ul,
+.project-intro ul ul,
+.project-intro p ul ul,
+.project-header ul ul,
+.project-header p ul ul,
+.project-card ul ul,
+.project-card p ul ul,
+.tab-content ul ul,
+.tab-content p ul ul {
+    margin-left: 20px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.project-section li,
+.placeholder-content li,
+.project-section p li,
+.method-section li,
+.method-section p li,
+.project-intro li,
+.project-intro p li,
+.project-header li,
+.project-header p li,
+.project-card li,
+.project-card p li,
+.tab-content li,
+.tab-content p li {
+    text-align: left;
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+/* Footer styles */
+.footer {
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+    color: white;
+    text-align: center;
+    padding: 40px 0;
+    margin-top: 80px;
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+
+.footer p {
+    opacity: 0.9;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.8rem;
+    }
+    
+    .subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .nav-tabs {
+        justify-content: flex-start;
+    }
+    
+    .nav-tab {
+        padding: 18px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .image-comparison {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .project-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .tab-content h2 {
+        font-size: 2.5rem;
+    }
+    
+    .project-card {
+        padding: 30px 25px;
+        margin: 0 15px;
+    }
+    
+    .project-header h3 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 60px 0;
+    }
+    
+    .title {
+        font-size: 2.2rem;
+    }
+    
+    .nav-tab {
+        padding: 15px 15px;
+        font-size: 0.8rem;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .project-card {
+        padding: 25px 20px;
+    }
+    
+    .project-section {
+        padding: 20px 15px;
+    }
+    
+    .image-section {
+        padding: 20px 15px;
+    }
+    
+    .image-upload-area {
+        padding: 30px 15px;
+    }
+    
+    .upload-icon {
+        font-size: 2.5rem;
+    }
+}
+
+/* Additional aesthetic enhancements */
+.project-card {
+    position: relative;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #003262, #1e4d7b, #3a7ca5);
+}
+
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0, 50, 98, 0.15);
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection styling */
+::selection {
+    background: rgba(0, 50, 98, 0.2);
+    color: #003262;
+}
+
+/* Focus styles for accessibility */
+.nav-tab:focus {
+    outline: 2px solid #003262;
+    outline-offset: 2px;
+}
