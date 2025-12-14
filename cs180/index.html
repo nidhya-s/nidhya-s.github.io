@@ -1414,7 +1414,10 @@ Recovered homography matrix H:
                             <!-- Part 1.1: Forward Process -->
                             <div class="project-section">
                                 <h3 class="part-header">Part 1.1: Implementing the Forward Process</h3>
-                                <p>Adding noise to images at different timesteps.</p>
+                                <p>
+                                    The forward process gradually adds Gaussian noise to an image over multiple timesteps. This simulates how a diffusion model 
+                                    learns to reverse the process—starting from pure noise, the model learns to denoise step by step to generate realistic images.
+                                </p>
 
                                 <h4>Test Image: Campanile</h4>
                                 <div class="image-grid" style="display: flex; justify-content: center; gap: 20px; margin: 20px 0;">
@@ -1429,7 +1432,10 @@ Recovered homography matrix H:
                             <!-- Part 1.2: Classical Denoising -->
                             <div class="project-section">
                                 <h3 class="part-header">Part 1.2: Classical Denoising</h3>
-                                <p>Using Gaussian blur filter for denoising.</p>
+                                <p>
+                                    A simple baseline approach using Gaussian blur to remove noise. While this smooths out the noise, it also blurs important details, 
+                                    showing why we need more sophisticated methods like diffusion models.
+                                </p>
 
                                 <div class="image-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
                                     <div class="image-item" style="min-width: 200px; text-align: center;">
@@ -1444,7 +1450,10 @@ Recovered homography matrix H:
                             <!-- Part 1.3: One-Step Denoising -->
                             <div class="project-section">
                                 <h3 class="part-header">Part 1.3: One-Step Denoising</h3>
-                                <p>Single-step denoising using the pretrained diffusion model UNet.</p>
+                                <p>
+                                    Using the pretrained UNet to predict and remove noise in a single step. The model does much better than Gaussian blur, 
+                                    but performance degrades as noise increases—showing why iterative denoising is necessary for heavily corrupted images.
+                                </p>
                                 
                                 <div class="vertical-figure-stack" style="display: flex; flex-direction: column; align-items: center; gap: 36px; margin: 30px 0;">
                                     <figure style="width: 520px; text-align: center;">
@@ -1468,7 +1477,10 @@ Recovered homography matrix H:
                             <!-- Part 1.4: Iterative Denoising -->
                             <div class="project-section">
                                 <h3 class="part-header">Part 1.4: Iterative Denoising</h3>
-                                <p>Multi-step denoising process with strided timestep scheduling.</p>
+                                <p>
+                                    Denoising an image over multiple steps using a strided timestep schedule. By gradually removing noise in smaller increments, 
+                                    the model can recover much more detail than single-step denoising, especially for heavily corrupted images.
+                                </p>
 
                                 <h4>Test Image: Campanile</h4>
                                 <div class="image-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin: 20px 0;">
@@ -1508,7 +1520,10 @@ Recovered homography matrix H:
                             <!-- Part 1.5: Diffusion Model Sampling -->
                             <div class="project-section">
                                 <h3 class="part-header">Part 1.5: Diffusion Model Sampling</h3>
-                                <p>Generating images from pure noise using text prompts.</p>
+                                <p>
+                                    Generating images from scratch by starting with pure random noise and iteratively denoising it. With text prompts, 
+                                    the model guides the generation process to create images that match the description.
+                                </p>
 
                                 <h4>Text Prompt: "a high quality photo"</h4>
                                 <div style="display: flex; justify-content: center; margin: 20px 0;">
@@ -1524,7 +1539,10 @@ Recovered homography matrix H:
                             <!-- Part 1.6: Classifier-Free Guidance (CFG) -->
                             <div class="project-section">
                                 <h3 class="part-header">Part 1.6: Classifier-Free Guidance (CFG)</h3>
-                                <p>Improving image quality by blending conditional and unconditional predictions.</p>
+                                <p>
+                                    Improving image quality by taking a weighted combination of conditional (prompt-guided) and unconditional predictions. 
+                                    This technique amplifies the effect of the text prompt, making generated images more faithful to the description.
+                                </p>
 
                                 <h4>Text Prompt: "a high quality photo"</h4>
                                 <div style="display: flex; justify-content: center; margin: 20px 0;">
@@ -1539,99 +1557,519 @@ Recovered homography matrix H:
                             <!-- Part 1.7: Image-to-Image Translation -->
                             <div class="project-section">
                                 <h3 class="part-header">Part 1.7: Image-to-Image Translation</h3>
-                                <p>Using SDEdit to transform images based on text prompts.</p>
+                                <p>
+                                    Using SDEdit algorithm to transform images by adding noise and then denoising with a text prompt. 
+                                    More noise leads to larger edits as the diffusion model "hallucinates" new content and forces the noisy image back onto the manifold of natural images.
+                                </p>
 
-                                <h4>Test Image: Campanile</h4>
-                                <div class="image-section">
-                                    <p><strong>Text Prompt: "a rocket ship"</strong></p>
-                                    <div class="image-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
-                                        <!-- Add results at different noise levels (i_start values) here -->
+                                <p><strong>Text Prompt: "a high quality photo"</strong></p>
+                                <p>Edits at noise levels [1, 3, 5, 7, 10, 20] steps:</p>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_7.png" alt="Image-to-image translation progression 1" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_72.png" alt="Image-to-image translation progression 2" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_73.png" alt="Image-to-image translation progression 3" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
 
-                                <div class="image-section">
-                                    <p><strong>Text Prompt: "a pencil"</strong></p>
-                                    <div class="image-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
-                                        <!-- Add results at different noise levels here -->
+                            <hr>
+
+                            <!-- Part 1.7.1: Editing Hand-Drawn and Web Images -->
+                            <div class="project-section">
+                                <h3 class="part-header">Part 1.7.1: Editing Hand-Drawn and Web Images</h3>
+                                <p>
+                                    This procedure works well by taking a nonrealistic image (e.g., painting, sketch, scribbles) and projecting it onto the "natural image manifold." 
+                                    The process transforms hand-drawn or web images into photorealistic versions at different noise levels.
+                                </p>
+
+                                <h4 class="part-subheader">Web Image</h4>
+                                <p>Edits at noise levels [1, 3, 5, 7, 10, 20] steps:</p>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/carrots.png" alt="Web image editing progression at different noise levels" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="image-section">
-                                    <p><strong>Text Prompt: "a photo of a dog"</strong></p>
-                                    <div class="image-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
-                                        <!-- Add results at different noise levels here -->
+                                <h4 class="part-subheader">Flower</h4>
+                                <p>Edits at noise levels [1, 3, 5, 7, 10, 15, 20] steps:</p>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/flower.png" alt="Flower editing progression at different noise levels" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
                                     </div>
                                 </div>
 
-                                <h4>Custom Examples</h4>
-                                <!-- Add your own image-to-image translation examples here -->
+                                <h4 class="part-subheader">Tree</h4>
+                                <p>Edits at noise levels [1, 3, 5, 7, 10, 15, 20] steps:</p>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/tree.png" alt="Tree editing progression at different noise levels" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Part 1.7.2: Inpainting -->
+                            <div class="project-section">
+                                <h3 class="part-header">Part 1.7.2: Inpainting</h3>
+                                <p>
+                                    Using the RePaint algorithm to fill in masked regions of images. At each denoising step, we preserve the original image pixels 
+                                    where the mask is 0, and let the diffusion model generate new content where the mask is 1. This allows us to seamlessly 
+                                    inpaint missing or unwanted parts of an image.
+                                </p>
+
+                                <h4 class="part-subheader">Campanile Inpainting</h4>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_7_2_1.png" alt="Campanile inpainting: original, mask, hole to fill, and inpainted result" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="part-subheader">Stonehenge Inpainting</h4>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_7_2_2.png" alt="Custom image 1 inpainting: original, mask, hole to fill, and inpainted result" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="part-subheader">Eiffel Tower Inpainting</h4>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_7_2_3.png" alt="Custom image 2 inpainting: original, mask, hole to fill, and inpainted result" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Part 1.7.3: Text-Conditional Image-to-Image Translation -->
+                            <div class="project-section">
+                                <h3 class="part-header">Part 1.7.3: Text-Conditional Image-to-Image Translation</h3>
+                                <p>
+                                    Similar to SDEdit, but guided with a text prompt. This is no longer pure "projection to the natural image manifold" 
+                                    but also adds control using language. The images should gradually look more like the original image, but also look like the text prompt.
+                                </p>
+
+                                <h4 class="part-subheader">Campanile with Text Prompt</h4>
+                                <p><strong>Text Prompt: a high quality photo of a tiny ramen shop under neon lights</strong></p>
+                                <p>Edits at noise levels [1, 3, 5, 7, 10, 20] steps:</p>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_7_3_1.png" alt="Campanile text-conditional image-to-image translation at different noise levels" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="part-subheader">Stonehenge with Text Prompt</h4>
+                                <p><strong>Text Prompt: a photo of a chrome cat sitting in a sunbeam</strong></p>
+                                <p>Edits at noise levels [1, 3, 5, 7, 10, 20] steps:</p>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_7_3_2.png" alt="Custom image 1 text-conditional image-to-image translation at different noise levels" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="part-subheader">Eiffel Tower with Text Prompt</h4>
+                                <p><strong>Text Prompt: a photo of a small robot watering glowing flowers at night</strong></p>
+                                <p>Edits at noise levels [1, 3, 5, 7, 10, 20] steps:</p>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_7_3_3.png" alt="Custom image 2 text-conditional image-to-image translation at different noise levels" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <hr>
 
                             <!-- Part 1.8: Visual Anagrams -->
                             <div class="project-section">
-                                <h3 class="part-header">Part 1.8: Editing Hand-Drawn and Web Images</h3>
-                                <p>Applying image-to-image translation to hand-drawn sketches and web images.</p>
+                                <h3 class="part-header">Part 1.8: Visual Anagrams</h3>
+                                <p>
+                                    Creating optical illusions using diffusion models. Visual anagrams are images that appear as one thing in their normal orientation 
+                                    and transform into something else when flipped upside down. The algorithm averages noise estimates from two prompts:
+                                </p>
+                                <ul>
+                                    <li>ε<sub>1</sub> = CFG of UNet(x<sub>t</sub>, t, p<sub>1</sub>)</li>
+                                    <li>ε<sub>2</sub> = flip(CFG of UNet(flip(x<sub>t</sub>), t, p<sub>2</sub>))</li>
+                                    <li>ε = (ε<sub>1</sub> + ε<sub>2</sub>) / 2</li>
+                                </ul>
+                                <p>
+                                    Where p<sub>1</sub> and p<sub>2</sub> are distinct text prompts, and the final noise estimate ε is used for denoising.
+                                </p>
 
-                                <!-- Add hand-drawn and web image editing results here -->
-                            </div>
-
-                            <hr>
-
-                            <!-- Part 1.9: Inpainting -->
-                            <div class="project-section">
-                                <h3 class="part-header">Part 1.9: Inpainting</h3>
-                                <p>Filling in masked regions of images using diffusion models.</p>
-
-                                <!-- Add inpainting results here -->
-                            </div>
-
-                            <hr>
-
-                            <!-- Part 1.10: Text-Conditional Image-to-Image Translation -->
-                            <div class="project-section">
-                                <h3 class="part-header">Part 1.10: Text-Conditional Image-to-Image Translation</h3>
-                                <p>Combining noise from original image and text-guided noise for controlled editing.</p>
-
-                                <!-- Add text-conditional translation results here -->
-                            </div>
-
-                            <hr>
-
-                            <!-- Visual Anagrams -->
-                            <div class="project-section">
-                                <h3 class="part-header">Visual Anagrams (Bonus)</h3>
-                                <p>Creating optical illusions by averaging noise estimates from different prompts.</p>
-
-                                <h4>Example: "an oil painting of people around a campfire" ↔ "an oil painting of an old man" (flipped)</h4>
-                                <div class="image-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
-                                    <!-- Add normal, flipped, and composite images here -->
+                                <h4 class="part-subheader">Visual Anagram 1</h4>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_8_1.png" alt="Visual anagram 1 showing both orientations" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <h4>Example: "an oil painting of an old man" ↔ "an oil painting of people around a campfire" (flipped)</h4>
-                                <div class="image-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
-                                    <!-- Add normal, flipped, and composite images here -->
+                                <h4 class="part-subheader">Visual Anagram 2</h4>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_8_2.png" alt="Visual anagram 2 showing both orientations" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <h4>Custom Anagram Examples</h4>
-                                <!-- Add your own visual anagram examples here -->
                             </div>
 
                             <hr>
 
-                            <!-- Hybrid Images -->
+                            <!-- Part 1.9: Hybrid Images -->
                             <div class="project-section">
-                                <h3 class="part-header">Hybrid Images (Bonus)</h3>
-                                <p>Creating hybrid images by combining low-pass and high-pass filtered noise from different prompts.</p>
+                                <h3 class="part-header">Part 1.9: Hybrid Images</h3>
+                                <p>
+                                    Implementing "Factorized Diffusion" to create hybrid images. The algorithm combines low frequencies from one noise estimate 
+                                    with high frequencies from another, creating images that appear different when viewed up close versus from a distance.
+                                </p>
+                                <p><strong>Algorithm:</strong></p>
+                                <ul>
+                                    <li>ε<sub>1</sub> = CFG of UNet(x<sub>t</sub>, t, p<sub>1</sub>)</li>
+                                    <li>ε<sub>2</sub> = CFG of UNet(x<sub>t</sub>, t, p<sub>2</sub>)</li>
+                                    <li>ε = f<sub>lowpass</sub>(ε<sub>1</sub>) + f<sub>highpass</sub>(ε<sub>2</sub>)</li>
+                                </ul>
+                                <p>
+                                    Where f<sub>lowpass</sub> and f<sub>highpass</sub> are low-pass and high-pass filters (e.g., Gaussian blur with kernel size 33 and sigma 2).
+                                </p>
 
-                                <h4>Example: "a lithograph of waterfalls" (low freq) + "a lithograph of a skull" (high freq)</h4>
-                                <div class="image-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
-                                    <!-- Add low freq, high freq, and composite images here -->
+                                <h4 class="part-subheader">Hybrid Image 1</h4>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_9_1.png" alt="Hybrid image 1 combining low and high frequencies from two prompts" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <h4>Custom Hybrid Image Examples</h4>
-                                <!-- Add your own hybrid image examples here -->
+                                <h4 class="part-subheader">Hybrid Image 2</h4>
+                                <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                    <div class="image-item" style="max-width: 100%; text-align: center;">
+                                        <div class="image-placeholder">
+                                            <img src="images/proj5_1_9_2.png" alt="Hybrid image 2 combining low and high frequencies from two prompts" class="project-image" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+
+                            </div>
+
+                        <!-- Part B -->
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Part B: Flow Matching from Scratch</h3>
+                            </div>
+
+                            <!-- Part B.1: Training a Single-Step Denoising UNet -->
+                            <div class="project-section">
+                                <h3 class="part-header">Part 1: Training a Single-Step Denoising UNet</h3>
+                                <p>
+                                    Building and training a UNet architecture for single-step denoising. The UNet uses convolutional layers with 
+                                    downsampling and upsampling paths to remove noise from images.
+                                </p>
+
+                                <!-- Part 1.1: Implementing the UNet -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 1.1: Implementing the UNet</h4>
+                                    <p>
+                                        Implementing the UNet architecture with convolutional blocks, downsampling layers, and upsampling layers. 
+                                        The network uses skip connections to preserve fine details during the denoising process.
+                                    </p>
+                                </div>
+
+                                <!-- Part 1.2: Using the UNet to Train a Denoiser -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 1.2: Using the UNet to Train a Denoiser</h4>
+                                    <p>
+                                        Training a denoiser D<sub>θ</sub> to map a noisy image z to a clean image x by optimizing the L2 loss: 
+                                        L = E<sub>z,x</sub>||D<sub>θ</sub>(z) - x||². Training pairs (z, x) are generated by adding Gaussian noise 
+                                        to clean MNIST digits: z = x + σε, where ε ~ N(0, I) and σ controls the noise level.
+                                    </p>
+
+                                    <h5>Noising Process Visualization</h5>
+                                    <p>Visualization of the noising process for σ = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]:</p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2.png" alt="Noising process visualization for different sigma values" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 1.2.1: Training -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 1.2.1: Training</h4>
+                                    <p>
+                                        Training the UNet denoiser to remove Gaussian noise (σ = 0.5) from MNIST digits. The model uses Adam optimizer 
+                                        with learning rate 1e-4, trained for 5 epochs on the MNIST training set with batch size 256. Noise is applied 
+                                        dynamically during training to improve generalization.
+                                    </p>
+
+                                    <h5>Training Loss Curve</h5>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2_1_loss.png" alt="Training loss curve for denoiser" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5>Denoising Results</h5>
+                                    <p>Sample results on test set:</p>
+                                    <p><strong>After Epoch 1:</strong></p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2_1_epoch1.png" alt="Denoising results after epoch 1" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p><strong>After Epoch 5:</strong></p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2_1.png" alt="Denoising results after epoch 5" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 1.2.2: Out-of-Distribution Testing -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 1.2.2: Out-of-Distribution Testing</h4>
+                                    <p>
+                                        Testing the denoiser's performance on noise levels it wasn't trained on. The model was trained on σ = 0.5, 
+                                        but we evaluate it on a range of noise levels σ = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0] to see how well 
+                                        it generalizes to different noise conditions.
+                                    </p>
+
+                                    <h5>Out-of-Distribution Results</h5>
+                                    <p>Sample results on test set with varying noise levels σ = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]:</p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2_2.png" alt="Out-of-distribution denoising results for different noise levels" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 1.2.3: Denoising Pure Noise -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 1.2.3: Denoising Pure Noise</h4>
+                                    <p>
+                                        Training the denoiser to generate images from pure random Gaussian noise, making it a generative model. 
+                                        Starting with a blank canvas z = ε where ε ~ N(0, I), the model learns to denoise pure noise into clean images 
+                                        over 5 epochs of training.
+                                    </p>
+
+                                    <h5>Training Loss Curve</h5>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2_3_loss.png" alt="Training loss curve for denoising pure noise" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5>Denoising Results</h5>
+                                    <p>Sample results on pure noise:</p>
+                                    <p><strong>After Epoch 1:</strong></p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2_3_epoch1.png" alt="Denoising pure noise results after epoch 1" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p><strong>After Epoch 5:</strong></p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_1_2_3.png" alt="Denoising pure noise results after epoch 5" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5>Observations</h5>
+                                    <p>
+                                        The generated outputs from denoising pure noise typically look like nothing recognizable, or sometimes resemble 
+                                        the number 8. This makes sense because 8 can be seen as a combination of elements from all other digits—it contains 
+                                        circular shapes like 0, 6, and 9, vertical lines like 1, and horizontal elements. When the model is trained on 
+                                        pure noise without any structure, it learns to output something that averages over all possible digit patterns, 
+                                        resulting in these ambiguous or 8-like shapes.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <!-- Part B.2: Training a Flow Matching Model -->
+                            <div class="project-section">
+                                <h3 class="part-header">Part 2: Training a Flow Matching Model</h3>
+                                <p>
+                                    Training flow matching models that learn to generate images by predicting the flow between noise and clean images. 
+                                    This approach uses continuous-time interpolation instead of discrete diffusion steps.
+                                </p>
+
+                                <!-- Part 2.1: Implementing a Time-conditioned UNet -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 2.1: Implementing a Time-conditioned UNet</h4>
+                                    <p>
+                                        Implementing a UNet that conditions on timestep t, allowing it to predict the flow at different points along 
+                                        the interpolation path from noise to clean images. The timestep is embedded and injected into the network.
+                                    </p>
+                                </div>
+
+                                <!-- Part 2.2: Training the UNet -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 2.2: Training the UNet</h4>
+                                    <p>
+                                        Training a time-conditioned UNet u<sub>θ</sub>(x<sub>t</sub>, t) to predict the flow at x<sub>t</sub> given a noisy image 
+                                        and timestep. The training process involves sampling random images from the training set, random timesteps t ~ Uniform([0, 1]), 
+                                        and creating interpolated images x<sub>t</sub> = (1 - t)x<sub>0</sub> + tx<sub>1</sub> where x<sub>0</sub> ~ N(0, I) and 
+                                        x<sub>1</sub> is a clean image. The model is trained with Adam optimizer and exponential learning rate decay.
+                                    </p>
+
+                                    <h5>Training Loss Curve</h5>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_2_2.png" alt="Training loss curve for time-conditioned UNet" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 2.3: Sampling Results -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 2.3: Sampling from the Time-conditioned UNet</h4>
+                                    <p>
+                                        Sampling images by starting from pure noise and iteratively applying the predicted flow to generate clean images. 
+                                        The sampling process uses Euler integration to follow the learned flow field.
+                                    </p>
+
+                                    <h5>Sampling Results</h5>
+                                    <p>Sample results from the time-conditioned UNet after 1, 5, and 10 epochs:</p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_2_3.png" alt="Sampling results after 1, 5, and 10 epochs" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 2.4: Implementing a Class-conditioned UNet -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 2.4: Implementing a Class-conditioned UNet</h4>
+                                    <p>
+                                        Extending the time-conditioned UNet to also condition on class labels. The class information is embedded and 
+                                        combined with the timestep embedding to enable class-conditional generation.
+                                    </p>
+                                </div>
+
+                                <!-- Part 2.5: Training the UNet (Class-Conditional) -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 2.5: Training the UNet (Class-Conditional)</h4>
+                                    <p>
+                                        Training a class-conditioned UNet u<sub>θ</sub>(x<sub>t</sub>, t, c) where c is a one-hot vector representing 
+                                        the digit class. The training process is similar to time-only conditioning, but includes class labels and 
+                                        periodically performs unconditional generation (setting c to zero-vector with probability p<sub>uncond</sub>) 
+                                        to improve the model's ability to generate without class guidance.
+                                    </p>
+
+                                    <h5>Training Loss Curve</h5>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_2_5.png" alt="Training loss curve for class-conditioned UNet" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Part 2.6: Sampling Results (Class-Conditional) -->
+                                <div class="project-section">
+                                    <h4 class="part-subheader">Part 2.6: Sampling from the Class-conditioned UNet</h4>
+                                    <p>
+                                        Sampling images from the class-conditioned UNet by providing specific class labels. This allows controlled generation 
+                                        of specific digits. Class-conditioning enables faster convergence, so we only train for 10 epochs. Generated 4 instances of each digit (0-9).
+                                    </p>
+
+                                    <h5>Sampling Results</h5>
+                                    <p>Sample results from the class-conditioned UNet after 1, 5, and 10 epochs:</p>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_2_6.png" alt="Class-conditioned sampling results after 1, 5, and 10 epochs" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5>Removing Learning Rate Scheduler</h5>
+                                    <p>
+                                        Experimenting with removing the exponential learning rate scheduler while maintaining the same performance. 
+                                        This explores whether we can simplify the training process without sacrificing quality.
+                                    </p>
+
+                                    <h6>Training Loss Curve (Without Scheduler)</h6>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_2_6_loss.png" alt="Training loss curve without learning rate scheduler" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6>Results Without Scheduler</h6>
+                                    <div class="image-group" style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin: 20px 0;">
+                                        <div class="image-item" style="max-width: 100%; text-align: center;">
+                                            <div class="image-placeholder">
+                                                <img src="images/proj5b_2_6_2.png" alt="Results after training without exponential learning rate scheduler" class="project-image" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6>Compensation Strategy</h6>
+                                    <p>
+                                        To compensate for removing the exponential learning rate scheduler, I reduced the learning rate. This helps 
+                                        maintain stable training and similar performance without the scheduler's automatic decay.
+                                    </p>
+                                </div>
+
                             </div>
 
                         </div>

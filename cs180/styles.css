@@ -182,9 +182,11 @@ body {
 
 .project-content {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 500px;
+    gap: 40px;
 }
 
 .project-card {
